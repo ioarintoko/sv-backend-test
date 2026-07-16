@@ -1,0 +1,153 @@
+{
+  "info": {
+    "name": "SV Backend Test - Article API",
+    "description": "Postman Collection untuk Test Backend Sharing Vision 2023 - Use Case Post Article",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://localhost:8080",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "1. Create Article",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"title\": \"Judul artikel percobaan pertama yang cukup panjang\",\n  \"content\": \"Ini adalah isi konten artikel yang sengaja dibuat panjang supaya memenuhi syarat validasi minimal 200 karakter. Ini adalah isi konten artikel yang sengaja dibuat panjang supaya memenuhi syarat validasi minimal 200 karakter. Tambahan kalimat.\",\n  \"category\": \"Teknologi\",\n  \"status\": \"publish\"\n}"
+        },
+        "url": {
+          "raw": "{{base_url}}/article/",
+          "host": ["{{base_url}}"],
+          "path": ["article", ""]
+        },
+        "description": "Membuat article baru. Validasi: title min 20 char, content min 200 char, category min 3 char, status harus publish/draft/thrash."
+      }
+    },
+    {
+      "name": "2. Get All Articles (with paging)",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/article/10/0",
+          "host": ["{{base_url}}"],
+          "path": ["article", "10", "0"],
+          "variable": [
+            {
+              "key": "limit",
+              "value": "10"
+            },
+            {
+              "key": "offset",
+              "value": "0"
+            }
+          ]
+        },
+        "description": "Menampilkan seluruh article dengan paging. Format: /article/<limit>/<offset>. Contoh ini: limit=10, offset=0."
+      }
+    },
+    {
+      "name": "3. Get Article By ID",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/article/1",
+          "host": ["{{base_url}}"],
+          "path": ["article", "1"]
+        },
+        "description": "Menampilkan article dengan id yang di-request."
+      }
+    },
+    {
+      "name": "4. Update Article",
+      "request": {
+        "method": "PUT",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"title\": \"Judul artikel yang sudah diupdate dan cukup panjang\",\n  \"content\": \"Ini adalah isi konten yang sudah diupdate, sengaja dibuat panjang supaya memenuhi syarat validasi minimal 200 karakter. Ini adalah isi konten yang sudah diupdate, sengaja dibuat panjang supaya memenuhi syarat validasi minimal 200 karakter juga.\",\n  \"category\": \"Teknologi Update\",\n  \"status\": \"draft\"\n}"
+        },
+        "url": {
+          "raw": "{{base_url}}/article/1",
+          "host": ["{{base_url}}"],
+          "path": ["article", "1"]
+        },
+        "description": "Merubah data article dengan id yang di-request. Bisa juga menggunakan method PATCH (endpoint sama)."
+      }
+    },
+    {
+      "name": "4b. Update Article (PATCH alternative)",
+      "request": {
+        "method": "PATCH",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"title\": \"Judul artikel yang sudah diupdate dan cukup panjang\",\n  \"content\": \"Ini adalah isi konten yang sudah diupdate, sengaja dibuat panjang supaya memenuhi syarat validasi minimal 200 karakter. Ini adalah isi konten yang sudah diupdate, sengaja dibuat panjang supaya memenuhi syarat validasi minimal 200 karakter juga.\",\n  \"category\": \"Teknologi Update\",\n  \"status\": \"draft\"\n}"
+        },
+        "url": {
+          "raw": "{{base_url}}/article/1",
+          "host": ["{{base_url}}"],
+          "path": ["article", "1"]
+        },
+        "description": "Alternatif method PATCH untuk update article dengan id yang sama."
+      }
+    },
+    {
+      "name": "5. Delete Article",
+      "request": {
+        "method": "DELETE",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/article/1",
+          "host": ["{{base_url}}"],
+          "path": ["article", "1"]
+        },
+        "description": "Menghapus data article dengan id yang di-request."
+      }
+    },
+    {
+      "name": "6. Create Article - Validation Error (negative test)",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"title\": \"Judul pendek\",\n  \"content\": \"Konten pendek\",\n  \"category\": \"IT\",\n  \"status\": \"invalid_status\"\n}"
+        },
+        "url": {
+          "raw": "{{base_url}}/article/",
+          "host": ["{{base_url}}"],
+          "path": ["article", ""]
+        },
+        "description": "Negative test case: title < 20 char, content < 200 char, category < 3 char (ok, ini 2 char sebenarnya salah juga), status bukan publish/draft/thrash. Harus return 400."
+      }
+    }
+  ]
+}
