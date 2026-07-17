@@ -2,6 +2,7 @@ package main
 
 import (
 	"log"
+	"strings"
 	"time"
 
 	"github.com/gin-contrib/cors"
@@ -22,7 +23,15 @@ func main() {
 	router := gin.Default()
 
 	router.Use(cors.New(cors.Config{
-		AllowOrigins:     []string{"http://localhost:5173", "https://*.vercel.app"},
+		AllowOriginFunc: func(origin string) bool {
+			allowedExact := map[string]bool{
+				"http://localhost:5173": true,
+			}
+			if allowedExact[origin] {
+				return true
+			}
+			return strings.HasSuffix(origin, ".railway.app") || strings.HasSuffix(origin, ".vercel.app")
+		},
 		AllowMethods:     []string{"GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"},
 		AllowHeaders:     []string{"Origin", "Content-Type", "Accept"},
 		AllowCredentials: true,
